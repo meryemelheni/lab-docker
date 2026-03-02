@@ -1,0 +1,103 @@
+version: "3.8"
+
+services:
+  # ============================================
+  # Service Base de Données - PostgreSQL
+  # ============================================
+  database:
+    image: postgres:16-alpine
+    container_name: taskflow-database
+    environment:
+      POSTGRES_DB: ${DB_NAME:-taskflow}
+      POSTGRES_USER: ${DB_USER:-taskuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-taskpass}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-taskuser} -d ${DB_NAME:-taskflow}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # ============================================
+  # Service Backend - Node.js Express API
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskflow-backend
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    environment:
+      PORT: ${BACKEND_PORT:-3000}
+      DB_HOST: database
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-taskflow}
+      DB_USER: ${DB_USER:-taskuser}
+      DB_PASSWORD: ${DB_PASSWORD:-taskpass}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - frontend-net
+      - backend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    restart: unless-stopped
+
+  # ============================================
+  # Service Frontend - React + Nginx
+  # ============================================
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+      args:
+        VITE_API_URL: http://backend:3000
+    container_name: taskflow-frontend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - frontend-net
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 128M
+    restart: unless-stopped
+
+# ============================================
+# Réseaux - Segmentation pour la sécurité
+# ============================================
+networks:
+  frontend-net:
+    driver: bridge
+    name: taskflow-frontend-net
+  backend-net:
+    driver: bridge
+    name: taskflow-backend-net
+
+# ============================================
+# Volumes - Persistance des données
+# ============================================
+volumes:
+  postgres-data:
+    driver: local
+    name: taskflow-postgres-data
