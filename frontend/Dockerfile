@@ -2,7 +2,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --only=production
+RUN npm install
 COPY . .
 ARG VITE_API_URL=http://localhost:3000
 ENV VITE_API_URL=$VITE_API_URL
@@ -19,7 +19,7 @@ RUN rm -rf ./*
 COPY --from=builder /app/dist .
 
 # Copier la config nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Créer un utilisateur non-root
 RUN apk add --no-cache curl && \

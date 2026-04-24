@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 222 47% 5%;
+  --foreground: 213 31% 91%;
+  --card: 222 40% 8%;
+  --card-foreground: 213 31% 91%;
+  --popover: 222 40% 8%;
+  --popover-foreground: 213 31% 91%;
+  --primary: 258 90% 66%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 222 30% 14%;
+  --secondary-foreground: 213 31% 75%;
+  --muted: 222 30% 12%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 258 60% 20%;
+  --accent-foreground: 258 90% 80%;
+  --destructive: 0 72% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 222 30% 14%;
+  --input: 222 30% 14%;
+  --ring: 258 90% 66%;
+  --radius: 1rem;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 100%;
+  --success: 160 84% 39%;
+  --success-foreground: 0 0% 100%;
+}
+
+* {
+  @apply border-border;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply text-foreground selection:bg-primary/30;
+  font-family: 'Inter', sans-serif;
+  background-color: hsl(222, 47%, 5%);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, hsla(258, 90%, 30%, 0.3) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, hsla(210, 90%, 25%, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 10% 40%, hsla(258, 90%, 40%, 0.05) 0%, transparent 40%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(222, 40%, 8%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(258, 90% , 40%);
+  border-radius: 3px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px hsla(258, 90%, 66%, 0.25), 0 0 60px hsla(258, 90%, 66%, 0.1);
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70;
+}
+
+.gradient-text-purple {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-400;
+}
+
+.glass-card {
+  @apply glass hover:bg-white/[0.05] transition-all duration-300;
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+}
+
+.glow-amber {
+  box-shadow: 0 0 20px hsla(38, 92%, 50%, 0.2), 0 0 40px hsla(38, 92%, 50%, 0.08);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px hsla(160, 84%, 39%, 0.2), 0 0 40px hsla(160, 84%, 39%, 0.08);
+}
