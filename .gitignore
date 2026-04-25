@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables - NE JAMAIS COMMITER
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Docker
+.dockerignore
+
+# Git
+.git
+
+# Cache
+.cache
+*.tmp
+
+# Screenshots (optionnel - décommenter si vous ne voulez pas les commiter)
+# screenshots/
